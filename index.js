@@ -1,39 +1,25 @@
+
+const express = require('express')
+const bodyParser = require('body-parser')
+
 const urlShortener = require('./url-shortener')
-const readline = require('readline')
+const { PORT } = require('./config')
 
-const shortenedUrls = {}
+const app = express()
 
-const shortenUrl = (url) => {
-  if (shortenedUrls[url]) {
-    shortenedUrls[url].hitCount++
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-    console.log(shortenedUrls[url].hitCount)
-    return shortenedUrls[url].url
+app.post('/', (req, res, next) =>  {
+  console.log()
+  res.status(200).send(urlShortener.shorten(req.body.url))
+})
+
+app.get('/*', (req, res, next) => {
+  const shortenedUrl = req.params[0]
+  if (shortenedUrl) {
+    res.redirect(urlShortener.getLongUrl(shortenedUrl))
   }
-  const shortenedUrl = urlShortener.shorten(url)
-  shortenedUrls[url] = {}
-  shortenedUrls[url].hitCount = 1
-  shortenedUrls[url].url = shortenedUrl
+})
 
-  console.log(shortenedUrls[url].hitCount)
-  return shortenedUrl
-}
-
-const main = () => {
-
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: 'Enter URL: '
-  })
-  rl.prompt()
-  rl.on('line', (line) => {
-    console.log(shortenUrl(line.trim()))
-    rl.prompt()
-  }).on('close', () => {
-    console.log('Have a great day!')
-    process.exit(0)
-  })
-}
-
-main()
+app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`))

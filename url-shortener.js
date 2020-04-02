@@ -1,13 +1,48 @@
-const { uuid, fromString } = require('uuidv4')
+const validUrlUtf8 = require('valid-url-utf8')
+const { BASE_URL } = require('./config')
 
 class UrlShortener {
   constructor () {
-    this.BASE_URL='http://brit.ly/'
+    this.alphabet = '123456789abcdefghijklmnopqrstuvwxyz'
+    this.size = 1
+    this.generatedEntries = 0
+    this.shortenedUrls = {}
+    this.shortUrls = {}
   }
 
   shorten(url) {
-    console.log('Shortened Called')
-    return `${this.BASE_URL}${fromString(url).split('-').join('')}`
+    if (!validUrlUtf8(url)) {
+      throw new Error('Invalid URL')
+    }
+    if (this.shortenedUrls[url]) {
+      this.shortenedUrls[url].hitCount++
+      return `${BASE_URL}${this.shortenedUrls[url].url}`
+    }
+    const shortenedUrl = this.encode(url)
+    this.shortenedUrls[url] = {}
+    this.shortenedUrls[url].hitCount = 1
+    this.shortenedUrls[url].url = shortenedUrl
+    this.shortUrls[shortenedUrl] = url
+
+    return `${BASE_URL}${shortenedUrl}`
+  }
+
+  getLongUrl(shortUrl) {
+    console.log(this.shortUrls)
+    return this.shortUrls[shortUrl]
+  }
+
+  encode(url) {
+    const shortenedUrl = []
+    for (let i = 0; i < this.size; ++i) {
+      let randIndex = Math.floor(Math.random() * (this.alphabet.length -1))
+      shortenedUrl.push(this.alphabet[randIndex])
+    }
+    this.generatedEntries++
+    if (this.generatedEntries > this.size * this.alphabet.length) {
+      this.size++
+    }
+    return shortenedUrl.join('')
   }
 }
 
