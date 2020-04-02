@@ -3,7 +3,7 @@ const { BASE_URL } = require('./config')
 
 class UrlShortener {
   constructor () {
-    this.alphabet = '123456789abcdefghijklmnopqrstuvwxyz'
+    this.alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'
     this.size = 1
     this.generatedEntries = 0
     this.shortenedUrls = {}
