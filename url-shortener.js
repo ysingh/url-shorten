@@ -28,7 +28,6 @@ class UrlShortener {
   }
 
   getLongUrl(shortUrl) {
-    console.log(this.shortUrls)
     return this.shortUrls[shortUrl]
   }
 
