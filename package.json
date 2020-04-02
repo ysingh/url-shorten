@@ -1,0 +1,19 @@
+{
+  "name": "tmo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "url-shortener.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node tests/url-shortener"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "uuidv4": "^6.0.7"
+  }
+}
